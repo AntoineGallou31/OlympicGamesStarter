@@ -10,7 +10,7 @@ export class CountryService {
   medalsByCountry!: number;
   numberOfEntries!: number;
   totalNumberAthletes!: number;
-  chartsData!: any[];
+  chartsData!: Object[];
 
   //getting the total of medals by country
   getTotalMedalByCountry(countryArray: Olympic[], countryName: string): number {
@@ -57,17 +57,14 @@ export class CountryService {
     const country = countryArray.find(country => country.country === countryName);
 
     if (country) {
-        // Créer un tableau des médailles avec la date
+        // Array of objects with the year and the number of medals
         this.chartsData = country.participations.map(participation => ({
             name: participation.year,  // Date of participation
             value: participation.medalsCount // Number of medals
         }))
-        console.log(this.chartsData);
         
       return this.chartsData;
-    }
-    
-    // If the country is not found, return an empty array
+    }  
     return [];
   }
 }

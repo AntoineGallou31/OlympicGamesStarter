@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CountryService } from "src/app/core/services/country.service";
-import { DataService } from "src/app/core/services/data.service";
+import { Observable } from 'rxjs';
+import { Olympic } from 'src/app/core/models/Olympic';
+import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
   selector: "app-detail-page",
@@ -11,28 +13,30 @@ import { DataService } from "src/app/core/services/data.service";
 
 export class DetailPageComponent implements OnInit {
 
-  public countryName!: string;
-  public countryData!: [] ;
+  olympics$!: Observable<Array<Olympic>>;
+  countryName!: string;
   totalMedals! : number;
   totalEntries! : number;
   totalAthletes! : number;
-  data! :any[];
-  dataCharts! :any[];
+  data! : Object[];
+  dataCharts! : Object[];
 
-  constructor( private route: ActivatedRoute,  private router: Router, private dataService: DataService, private countryService : CountryService) {}
+  constructor( private route: ActivatedRoute,  private router: Router, private countryService : CountryService, private olympicService: OlympicService) {}
 
   ngOnInit() {
-        
+
     this.countryName = this.route.snapshot.params['id'];
-    console.log('ID récupéré :', this.countryName);
 
-    this.countryData = this.dataService.getCountryData();
-    console.log(this.countryData);
-
-    this.totalEntries = this.countryService.getTotalOfEntries(this.countryData, this.countryName);
-    this.totalMedals = this.countryService.getTotalMedalByCountry(this.countryData, this.countryName);
-    this.totalAthletes = this.countryService.getTotalAthletesbyCountry(this.countryData, this.countryName);
-    this.data = this.countryService.getDataForPieCharts(this.countryData, this.countryName);
+    this.olympics$ = this.olympicService.getOlympics();
+    
+    this.olympics$.subscribe((r: any)=> 
+      {
+        this.totalEntries = this.countryService.getTotalOfEntries(r, this.countryName);
+        this.totalMedals = this.countryService.getTotalMedalByCountry(r, this.countryName);
+        this.totalAthletes = this.countryService.getTotalAthletesbyCountry(r, this.countryName);
+        this.data = this.countryService.getDataForPieCharts(r, this.countryName);
+      }
+    )
 
     this.dataCharts = [
       {

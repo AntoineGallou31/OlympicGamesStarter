@@ -14,8 +14,8 @@ import { Participation } from '../models/Participation';
 export class OlympicService {
   private olympics$ = new BehaviorSubject<any>(undefined);
 
-  medalData!: any[];
-  countryArray!: any[];
+  medalData!: Object[];
+  countryArray!: Object[];
 
   constructor(private http: HttpClient) {}
 
@@ -23,9 +23,7 @@ export class OlympicService {
     return this.http.get<Array<Olympic>>(environment.apiUrl).pipe(
       tap((value) => this.olympics$.next(value)),
       catchError((error, caught) => {
-        // TODO: improve error handling
         console.error(error);
-        // can be useful to end loading state and let the user know something went wrong
         this.olympics$.next(null);
         return caught;
       })
@@ -33,13 +31,11 @@ export class OlympicService {
   }
 
   // Http Request to get the data from the mock
-
   getOlympics(): Observable<Array<Olympic>> {
     return this.olympics$.asObservable();
   }
 
-  //  create a array for showing the data in pie charts
-
+  // Create a array for showing the data in pie charts
   getTotalMedalsForPieCharts(countryArray: Olympic[]): any[] {
     this.medalData = countryArray.map(country => ({
     name: country.country,
@@ -48,7 +44,7 @@ export class OlympicService {
     return this.medalData;
   }
 
-  //Method to get the number of JO
+  // Method to get the number of JOs
   getTotalJO(countryArray: Olympic[]): number {
     const jo = new Set<string>();
     countryArray.forEach((country: Olympic) => {

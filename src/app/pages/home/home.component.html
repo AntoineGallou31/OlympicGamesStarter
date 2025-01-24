@@ -1,14 +1,14 @@
 <div class="container">
     <div class="header">Medals per Country</div>
     <div class="cards-container">
-    <div class="card">
-        <p>Number of JOs</p>
-        <strong>{{totalCities}}</strong>
-    </div>
-    <div class="card">
-        <p>Number of countries</p>
-        <strong>{{ (olympics$ | async)?.length }}</strong>
-    </div>
+      <div class="card">
+          <p>Number of JOs</p>
+          <strong>{{totalCities}}</strong>
+      </div>
+      <div class="card">
+          <p>Number of countries</p>
+          <strong>{{ (olympics$ | async)?.length }}</strong>
+      </div>
   </div>
 </div>
 
@@ -17,5 +17,6 @@
     [results]="medalData"
     [legend]="showLegend"
     [labels]="showLabels"
-    (select)="onPieChartClick($event)"></ngx-charts-pie-chart>
+    (select)="onPieChartClick($event)">
+  </ngx-charts-pie-chart>
 </div>
