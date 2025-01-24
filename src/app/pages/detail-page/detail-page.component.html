@@ -1,0 +1,34 @@
+<button (click)="returnButton()" class="buttonStyle">Return</button>
+
+<div class="container">
+    <div class="header">{{countryName}}</div>
+    <div class="cards-container">
+    <div class="card">
+        <p>Number of entities</p>
+        <strong>{{totalEntries}}</strong>
+    </div>
+    <div class="card">
+        <p>Total numbers of medals</p>
+        <strong>{{totalMedals}}</strong>
+    </div>
+    <div class="card">
+        <p>Total numbers of athletes</p>
+        <strong>{{totalAthletes}}</strong>
+    </div>
+  </div>
+</div>
+
+<div>
+  <ngx-charts-line-chart
+  [view]="[700, 300]"
+  [results]="dataCharts"
+  [xAxis]="true"
+  [yAxis]="true"
+  [autoScale]="true"
+  [showXAxisLabel]="true"
+  [showYAxisLabel]="true"
+  [xAxisLabel]="'Dates'"
+  [yAxisLabel]="'Medals'">
+  </ngx-charts-line-chart>
+</div>
+

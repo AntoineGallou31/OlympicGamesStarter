@@ -1,7 +1,28 @@
+.buttonStyle {
+    margin: 3%;
+    background-color: #00838f;
+    color: white;
+    padding: 0.5%;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: normal;
+    transition-duration: 0.4s;
+    border: 2px solid #04AA6D;
+}
+
+.buttonStyle:hover {
+    background-color: white;
+    color: #04AA6D;
+    border: 2px solid #04AA6D;
+    cursor: pointer;
+}
+
 .container {
     text-align: center;
     font-family: Roboto, sans-serif;
     margin-top: 5%;
+    margin-bottom: 5%;
     letter-spacing: 1px;
 }
 
@@ -42,7 +63,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .header {
         font-size: 20px;
         padding: 8px 16px;
