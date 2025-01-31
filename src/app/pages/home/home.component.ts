@@ -24,12 +24,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.olympics$ = this.olympicService.getOlympics();
 
-    this.subscription = this.olympics$.subscribe((r: Olympic[])=> 
+    this.subscription = this.olympics$.subscribe((dataJson: Olympic[])=> 
       {
-        this.medalData = this.olympicService.getTotalMedalsForPieCharts(r);
-        this.totalCities = this.olympicService.getTotalJO(r);
+        this.medalData = this.olympicService.getTotalMedalsForPieCharts(dataJson);
+        this.totalCities = this.olympicService.getTotalJO(dataJson);
       }
     )
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
   
   // routing to detail page with the countryName of the clicked pie chart
@@ -38,12 +44,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     
     if (clickedName) {
       this.router.navigate(['/detail', clickedName]);
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
     }
   }
 

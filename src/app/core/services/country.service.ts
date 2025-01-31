@@ -12,43 +12,21 @@ export class CountryService {
   totalNumberAthletes!: number;
   chartsData!: Object[];
 
-  //getting the total of medals by country
-  getTotalMedalByCountry(countryArray: Olympic[], countryName: string): number {
-    let medals = 0;
-    countryArray.forEach((country: Olympic) => {
-        if (country.country === countryName) {
-          country.participations.forEach((participation) => {
-            medals += participation.medalsCount;
-        });
-      }
-    });
-    return medals;
+  getOlympicsByCountry(countryArray: Olympic[], countryName: string) {
+    // filter countries on specified country in argument
+    return countryArray.find(olympic => olympic.country === countryName);
   }
 
-  //getting the total of participations by country
-  getTotalOfEntries(countryArray: Olympic[], countryName: string) {
-    const entries = new Set<string>();
-    countryArray.forEach((country: Olympic) => {
-      if (country.country === countryName) {
-        country.participations.forEach((participation) => {
-          entries.add(participation.city);
-        });
-      }
-    });
-    return entries.size;
-  }
-
-  // getting the total of athletes by country
-  getTotalAthletesbyCountry(countryArray: Olympic[], countryName: string): number {
-    let athletes = 0;
-    countryArray.forEach((country: Olympic) => {
-        if (country.country === countryName) {
-          country.participations.forEach((participation) => {
-            athletes += participation.athleteCount;
-        });
-      }
-    });
-    return athletes;
+  // get all the stats for the country name
+  getCountryStats(countryArray: Olympic[], countryName: string) {
+    const country = countryArray.find(country => country.country === countryName);
+    if (!country) return { medals: 0, entries: 0, athletes: 0 };
+  
+    return {
+      medals: country.participations.reduce((total, p) => total + p.medalsCount, 0),
+      entries: new Set(country.participations.map(p => p.city)).size,
+      athletes: country.participations.reduce((total, p) => total + p.athleteCount, 0),
+    };
   }
 
   // create a array for showing the data in line charts

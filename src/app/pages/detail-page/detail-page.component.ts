@@ -31,15 +31,20 @@ export class DetailPageComponent implements OnInit, OnDestroy {
 
     this.olympics$ = this.olympicService.getOlympics();
     
-    this.subscription= this.olympics$.subscribe((r: Olympic[])=> 
-      {
-        this.totalEntries = this.countryService.getTotalOfEntries(r, this.countryName);
-        this.totalMedals = this.countryService.getTotalMedalByCountry(r, this.countryName);
-        this.totalAthletes = this.countryService.getTotalAthletesbyCountry(r, this.countryName);
-        this.data = this.countryService.getDataForPieCharts(r, this.countryName);
+    this.subscription= this.olympics$.subscribe((dataJson: Olympic[])=> 
+      { const country = this.countryService.getOlympicsByCountry(dataJson, this.countryName);
+        if (country === undefined) {
+          this.router.navigateByUrl('error');
+        }
+        else {
+        const stats = this.countryService.getCountryStats(dataJson, this.countryName);
+        this.totalEntries = stats.entries;
+        this.totalMedals = stats.medals
+        this.totalAthletes = stats.athletes;
+        this.data = this.countryService.getDataForPieCharts(dataJson, this.countryName);
+        }
       }
     );
-
 
     this.dataCharts = [
       {
@@ -48,14 +53,14 @@ export class DetailPageComponent implements OnInit, OnDestroy {
       }]
   }
 
-  returnButton() {
-    this.router.navigateByUrl('/dashboard');
-  }
-
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  returnButton() {
+    this.router.navigateByUrl('/dashboard');
   }
 
 }
