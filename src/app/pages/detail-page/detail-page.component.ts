@@ -1,7 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CountryService } from "src/app/core/services/country.service";
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -11,7 +11,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   styleUrls: ["./detail-page.component.scss"]
 })
 
-export class DetailPageComponent implements OnInit {
+export class DetailPageComponent implements OnInit, OnDestroy {
 
   olympics$!: Observable<Array<Olympic>>;
   countryName!: string;
@@ -20,6 +20,8 @@ export class DetailPageComponent implements OnInit {
   totalAthletes! : number;
   data! : Object[];
   dataCharts! : Object[];
+  private subscription!: Subscription;
+
 
   constructor( private route: ActivatedRoute,  private router: Router, private countryService : CountryService, private olympicService: OlympicService) {}
 
@@ -29,14 +31,15 @@ export class DetailPageComponent implements OnInit {
 
     this.olympics$ = this.olympicService.getOlympics();
     
-    this.olympics$.subscribe((r: any)=> 
+    this.subscription= this.olympics$.subscribe((r: Olympic[])=> 
       {
         this.totalEntries = this.countryService.getTotalOfEntries(r, this.countryName);
         this.totalMedals = this.countryService.getTotalMedalByCountry(r, this.countryName);
         this.totalAthletes = this.countryService.getTotalAthletesbyCountry(r, this.countryName);
         this.data = this.countryService.getDataForPieCharts(r, this.countryName);
       }
-    )
+    );
+
 
     this.dataCharts = [
       {
@@ -47,6 +50,12 @@ export class DetailPageComponent implements OnInit {
 
   returnButton() {
     this.router.navigateByUrl('/dashboard');
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }
